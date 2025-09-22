@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the Cyber Expo 2025</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+        :root {
+            --bg-color: #0d1117;
+            --container-bg: #161b22;
+            --accent-color: #2e8b57; /* Sea Green */
+            --highlight-color: #7fffd4; /* Aquamarine */
+            --text-color: #c9d1d9;
+            --border-color: #30363d;
+            --star-color: gold;
+        }
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(46, 139, 87, 0.05) 0%, rgba(13, 17, 23, 0) 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            width: 90%;
+            max-width: 1200px;
+            gap: 2em;
+            margin-top: 2em;
+            position: relative;
+            z-index: 1;
+            box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
+        }
+
+        .container {
+            background-color: var(--container-bg);
+            padding: 2.5em;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .leaderboard-container {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--container-bg);
+            padding: 1.5em;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            margin-left: auto;
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+                align-items: center;
+                gap: 1em;
+            }
+            .leaderboard-container {
+                margin: 0;
+                margin-top: 1em;
+            }
+        }
+
+        h1 {
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5em;
+            text-shadow: 0 0 5px var(--accent-color);
+        }
+        
+        h2 {
+            color: var(--highlight-color);
+            margin-bottom: 1em;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border: 1px solid var(--accent-color);
+            padding: 0.8em 2em;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            margin-top: 1.5em;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: var(--highlight-color);
+            color: var(--bg-color);
+            border-color: var(--highlight-color);
+            box-shadow: 0 0 10px var(--highlight-color);
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            background-color: #4a4a4a;
+            border-color: #4a4a4a;
+            cursor: not-allowed;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 1.5em;
+        }
+
+        .option {
+            background-color: var(--border-color);
+            color: var(--text-color);
+            padding: 1em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            text-align: left;
+            border: 1px solid transparent;
+        }
+
+        .option:hover {
+            background-color: #21262d;
+            border-color: var(--highlight-color);
+            transform: translateY(-2px);
+        }
+
+        #timer-bar-container {
+            width: 100%;
+            background-color: var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 1.5em;
+            height: 10px;
+        }
+
+        #timer-bar {
+            height: 10px;
+            background-color: var(--highlight-color);
+            width: 100%;
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+
+        #leaderboard {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 1em;
+        }
+
+        #leaderboard li {
+            background-color: #1e252d;
+            margin-bottom: 8px;
+            padding: 12px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .leaderboard-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .leaderboard-score {
+            text-align: right;
+            font-size: 0.9em;
+        }
+
+        .rating {
+            font-size: 1.2em;
+            color: var(--star-color);
+            letter-spacing: -2px;
+        }
+
+        .form-group {
+            margin-bottom: 1em;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5em;
+        }
+
+        .form-group input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            background-color: var(--container-bg);
+            color: var(--text-color);
+            border-radius: 4px;
+        }
+
+        #download-csv {
+            margin-top: 1em;
+            background-color: #3887c9;
+            border-color: #3887c9;
+        }
+        
+        #download-csv:hover:not(:disabled) {
+            background-color: #559dd7;
+            border-color: #559dd7;
+        }
+
+        .marquee-container {
+            width: 100%;
+            overflow: hidden;
+            background-color: #0d1117;
+            padding: 10px 0;
+            white-space: nowrap;
+            box-shadow: inset 0 0 10px #000;
+            border-top: 1px solid var(--border-color);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .marquee-text {
+            display: inline-block;
+            animation: marquee 20s linear infinite;
+            font-size: 1.2em;
+            color: var(--highlight-color);
+            text-shadow: 0 0 5px var(--highlight-color);
+        }
+        @keyframes marquee {
+            0%   { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <div class="container">
+            <h1><span style="color: var(--highlight-color)">Welcome</span> to the Cyber EXpo 2025</h1>
+            <div id="quiz-container">
+                <div id="registration-page">
+                    <h2>Registration</h2>
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="employee-id">Employee ID:</label>
+                        <input type="text" id="employee-id" placeholder="e.g., EMP12345" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="division">Division:</label>
+                        <input type="text" id="division" placeholder="e.g., Cyber Defense" required>
+                    </div>
+                    <button id="register-btn">Register</button>
+                </div>
+                
+                <div id="question-screen" style="display:none;">
+                    <div id="timer-bar-container">
+                        <div id="timer-bar"></div>
+                    </div>
+                    <h2 id="question"></h2>
+                    <div id="options" class="options-container"></div>
+                </div>
+                
+                <div id="end-screen" style="display:none;">
+                    <h2>Quiz Protocol Complete</h2>
+                    <div id="score-details"></div>
+                    <button id="restart-btn">Try Again</button>
+                </div>
+            </div>
+        </div>
+        <div class="leaderboard-container">
+            <h3>Current Agents' Scores</h3>
+            <ul id="leaderboard"></ul>
+            <button id="download-csv">Download Leaderboard (CSV)</button>
+        </div>
+    </div>
+    <div class="marquee-container">
+        <div class="marquee-text">-----Welcome to the Cyber Expo----- @Durgaprasad_CopyRight</div>
+    </div>
+    <script>
+        const questions = [
+            // AI in Network Security
+            {
+                question: "What is the primary role of AI in a Network Intrusion Detection System (NIDS)?",
+                options: ["To encrypt all network traffic.", "To manually block all suspicious IPs.", "To analyze network traffic patterns for anomalies.", "To create new firewall rules."],
+                answer: "To analyze network traffic patterns for anomalies.",
+                category: "AI in Network Security"
+            },
+            {
+                question: "How does AI enhance a Security Information and Event Management (SIEM) system?",
+                options: ["By creating more log files.", "By generating more alerts.", "By correlating vast amounts of data to identify complex threats.", "By reducing the speed of log processing."],
+                answer: "By correlating vast amounts of data to identify complex threats.",
+                category: "AI in Network Security"
+            },
+            // AI in Cloud Security
+            {
+                question: "Which of the following best describes the use of AI in a Cloud Access Security Broker (CASB)?",
+                options: ["To manage physical servers.", "To automate security posture management by detecting misconfigurations.", "To replace traditional antivirus software.", "To create new cloud applications."],
+                answer: "To automate security posture management by detecting misconfigurations.",
+                category: "AI in Cloud Security"
+            },
+            {
+                question: "How can AI assist in detecting insider threats within a cloud environment?",
+                options: ["By blocking all user access.", "By analyzing user behavior for deviations from normal activity.", "By increasing the cost of cloud services.", "By disabling multi-factor authentication."],
+                answer: "By analyzing user behavior for deviations from normal activity.",
+                category: "AI in Cloud Security"
+            },
+            // AI in Adversarial Attacks
+            {
+                question: "What is an 'adversarial example' in the context of AI security?",
+                options: ["A piece of malware that uses AI.", "An input crafted to intentionally mislead an AI model.", "A type of firewall.", "A new encryption algorithm."],
+                answer: "An input crafted to intentionally mislead an AI model.",
+                category: "AI in Adversarial Attacks"
+            },
+            {
+                question: "What is a 'data poisoning' attack?",
+                options: ["Flooding a network with data.", "Introducing malicious data into a model's training set.", "Encrypting all user data.", "A type of phishing attack."],
+                answer: "Introducing malicious data into a model's training set.",
+                category: "AI in Adversarial Attacks"
+            },
+            // AI in Ethics & Governance
+            {
+                question: "What is a major ethical concern regarding AI in surveillance?",
+                options: ["It makes surveillance too slow.", "The potential for bias and discrimination in facial recognition systems.", "It is too expensive to implement.", "It requires a lot of electricity."],
+                answer: "The potential for bias and and discrimination in facial recognition systems.",
+                category: "AI in Ethics & Governance"
+            },
+            {
+                question: "Why is 'algorithmic transparency' important in AI-driven cybersecurity?",
+                options: ["To ensure the algorithms are easy to copy.", "To understand why a system made a particular security decision.", "To make the system less secure.", "To reduce the number of alerts."],
+                answer: "To understand why a system made a particular security decision.",
+                category: "AI in Ethics & Governance"
+            },
+            // AI in SOC Automation
+            {
+                question: "How does AI enhance Security Operations Center (SOC) efficiency?",
+                options: ["By manually assigning tasks to analysts.", "By automating the triage and response to routine incidents.", "By increasing the number of false positives.", "By making the SOC team smaller."],
+                answer: "By automating the triage and response to routine incidents.",
+                category: "AI in SOC Automation"
+            },
+            {
+                question: "What is the primary benefit of a 'SOAR' (Security Orchestration, Automation, and Response) platform driven by AI?",
+                options: ["It replaces all human analysts.", "It slows down incident response.", "It connects and automates disparate security tools and processes.", "It generates more threat intelligence reports."],
+                answer: "It connects and automates disparate security tools and processes.",
+                category: "AI in SOC Automation"
+            },
+            // AI in Future Cyber Defense
+            {
+                question: "What is a 'self-healing' network in the context of future cyber defense?",
+                options: ["A network that requires no maintenance.", "A network that can automatically detect and recover from security breaches.", "A network that only uses fiber optic cables.", "A network that is managed by a single server."],
+                answer: "A network that can automatically detect and recover from security breaches.",
+                category: "AI in Future Cyber Defense"
+            },
+            {
+                question: "How might AI be used to predict future cyber attacks?",
+                options: ["By simply guessing.", "By analyzing historical attack data and threat intelligence to identify patterns.", "By reading news articles about attacks.", "By shutting down all network traffic."],
+                answer: "By analyzing historical attack data and threat intelligence to identify patterns.",
+                category: "AI in Future Cyber Defense"
+            },
+            // Add more questions here to reach 100
+            // ...
+        ];
+
+        let quizQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let startTime;
+        let timer;
+        let currentUser = null;
+        const TIME_PER_QUESTION = 20;
+
+        const registrationPage = document.getElementById('registration-page');
+        const questionScreen = document.getElementById('question-screen');
+        const endScreen = document.getElementById('end-screen');
+        const registerBtn = document.getElementById('register-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const downloadCsvBtn = document.getElementById('download-csv');
+        const nameInput = document.getElementById('name');
+        const employeeIdInput = document.getElementById('employee-id');
+        const divisionInput = document.getElementById('division');
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const timerBar = document.getElementById('timer-bar');
+        const scoreDetails = document.getElementById('score-details');
+        const leaderboardEl = document.getElementById('leaderboard');
+
+        // Event Listeners
+        registerBtn.addEventListener('click', () => {
+            if (registerUser()) {
+                startQuiz();
+            }
+        });
+        restartBtn.addEventListener('click', () => {
+            endScreen.style.display = 'none';
+            registrationPage.style.display = 'block';
+            nameInput.value = '';
+            employeeIdInput.value = '';
+            divisionInput.value = '';
+        });
+        downloadCsvBtn.addEventListener('click', downloadLeaderboard);
+
+        function registerUser() {
+            const name = nameInput.value.trim();
+            const employeeId = employeeIdInput.value.trim();
+            const division = divisionInput.value.trim();
+
+            if (name && employeeId && division) {
+                currentUser = { name, employeeId, division };
+                return true;
+            } else {
+                alert('Please fill out all registration details.');
+                return false;
+            }
+        }
+
+        function startQuiz() {
+            registrationPage.style.display = 'none';
+            questionScreen.style.display = 'block';
+            
+            const shuffled = [...questions].sort(() => 0.5 - Math.random());
+            quizQuestions = shuffled.slice(0, 5);
+            
+            currentQuestionIndex = 0;
+            userAnswers = [];
+            startTime = new Date();
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= quizQuestions.length) {
+                endQuiz();
+                return;
+            }
+            
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            questionEl.textContent = currentQuestion.question;
+            optionsEl.innerHTML = '';
+            
+            currentQuestion.options.forEach(option => {
+                const optionEl = document.createElement('div');
+                optionEl.textContent = option;
+                optionEl.classList.add('option');
+                optionEl.addEventListener('click', () => selectAnswer(option));
+                optionsEl.appendChild(optionEl);
+            });
+            
+            startTimer();
+        }
+
+        function startTimer() {
+            let timeLeft = TIME_PER_QUESTION;
+            timerBar.style.width = '100%';
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                const percentage = (timeLeft / TIME_PER_QUESTION) * 100;
+                timerBar.style.width = percentage + '%';
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    selectAnswer(null); 
+                }
+            }, 1000);
+        }
+
+        function selectAnswer(answer) {
+            clearInterval(timer);
+            userAnswers.push({
+                question: quizQuestions[currentQuestionIndex].question,
+                selected: answer,
+                correct: quizQuestions[currentQuestionIndex].answer,
+                isCorrect: answer === quizQuestions[currentQuestionIndex].answer
+            });
+            
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            questionScreen.style.display = 'none';
+            endScreen.style.display = 'block';
+            
+            const endTime = new Date();
+            const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+            const score = userAnswers.filter(a => a.isCorrect).length;
+            
+            scoreDetails.innerHTML = `
+                <p>Your Score: <strong>${score} out of ${quizQuestions.length}</strong></p>
+                <p>Time Taken: <strong>${timeTaken} seconds</strong></p>
+            `;
+            
+            // Store and update leaderboard
+            if (currentUser) {
+                let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+                const existingIndex = leaderboard.findIndex(user => user.employeeId === currentUser.employeeId);
+                const newScore = {
+                    ...currentUser,
+                    score,
+                    timeTaken: parseFloat(timeTaken),
+                    date: new Date().toISOString()
+                };
+
+                if (existingIndex > -1) {
+                    // Update if new score is better
+                    if (newScore.score > leaderboard[existingIndex].score ||
+                        (newScore.score === leaderboard[existingIndex].score && newScore.timeTaken < leaderboard[existingIndex].timeTaken)) {
+                        leaderboard[existingIndex] = newScore;
+                    }
+                } else {
+                    leaderboard.push(newScore);
+                }
+
+                leaderboard.sort((a, b) => b.score - a.score || a.timeTaken - b.timeTaken);
+                leaderboard = leaderboard.slice(0, 5);
+                localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+                
+                updateLeaderboard(leaderboard);
+            }
+        }
+
+        function updateLeaderboard(leaderboard) {
+            leaderboardEl.innerHTML = '';
+            leaderboard.forEach((entry, index) => {
+                const li = document.createElement('li');
+                
+                const stars = '★'.repeat(entry.score) + '☆'.repeat(5 - entry.score);
+
+                li.innerHTML = `
+                    <div class="leaderboard-info">
+                        <span><strong>${index + 1}. ${entry.name}</strong> (${entry.division})</span>
+                        <span class="rating">${stars}</span>
+                    </div>
+                    <div class="leaderboard-score">
+                        <span>Score: ${entry.score} | Time: ${entry.timeTaken}s</span>
+                    </div>
+                `;
+                leaderboardEl.appendChild(li);
+            });
+        }
+
+        function downloadLeaderboard() {
+            let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+            const header = "Name,EmployeeID,Division,Score,TimeTaken(s),Date\n";
+            const csv = leaderboard.map(user => 
+                `${user.name},${user.employeeId},${user.division},${user.score},${user.timeTaken},${user.date}`
+            ).join("\n");
+            
+            const blob = new Blob([header + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "cyber_quiz_leaderboard.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Initial leaderboard load
+        window.onload = () => {
+            const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+            updateLeaderboard(leaderboard);
+        };
+    </script>
+</body>
+</html>
